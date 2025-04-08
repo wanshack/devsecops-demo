@@ -12,11 +12,11 @@ permissions:
 jobs:
   devsecops:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Setup Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -47,12 +47,13 @@ jobs:
       - name: Build Docker image
         run: docker build -t devsecops-demo .
 
-      # Scan Docker image - Trivy
+      # Container Scanning - Trivy
       - name: Trivy scan
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'devsecops-demo'
 
+      # Push Docker Image
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
@@ -61,6 +62,7 @@ jobs:
           docker tag devsecops-demo ${{ secrets.DOCKER_USERNAME }}/devsecops-demo:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/devsecops-demo:latest
 
+      # Notification
       - name: Send Telegram Notification
         if: always()
         run: |
