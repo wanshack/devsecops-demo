@@ -29,20 +29,19 @@ jobs:
 
       # Static Analysis - CodeQL
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: python
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
 
       # SCA - Dependency Check
       - name: Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
           project: 'DevSecOpsDemo'
-          scan: '.'
-          format: 'HTML'
+          path: '.'
 
       # Build Docker Image
       - name: Build Docker image
